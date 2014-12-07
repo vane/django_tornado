@@ -16,3 +16,5 @@ Simple chat app with memory storage and callbacks when user leaves/joins chat.
 Server side logic is in chat.py and client side in chat.js
 
 and you should see the time running and message to join some chat
+
+Enjoy ;)
