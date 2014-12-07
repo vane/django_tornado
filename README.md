@@ -27,6 +27,4 @@ Also since we can add calback to PushClientStore and listen to sockjs client add
 PushClientStore.register('chat', chat.ChatStorage.callback)
 </pre>
 
-and you should see the time running and message to join some chat
-
 Enjoy ;)
