@@ -9,8 +9,7 @@
 var chat;
 (function(chat) {
     chat.enterKeyDownHandler = function(event) {
-        var keyCode = (window.event) ? e.which : e.keyCode;
-        if(keyCode == 13) {
+        if(event.keyCode == 13) {
             RequestEnter();
         }
     }
@@ -20,8 +19,7 @@ var chat;
     }
 
     chat.messageKeyDownHandler = function(event) {
-        var keyCode = (window.event) ? e.which : e.keyCode;
-        if(keyCode == 13) {
+        if(event.keyCode == 13) {
             RequestPost();
         }
     }
@@ -86,33 +84,55 @@ var chat;
             fx.html("date_span", fx.dateFull(d));
         } else {
             console.log(o);
-            if(o.type == 'ch_usr') {
-                var d = o.data;
-                var out = "";
-                for(var i = 0;i<d.length;i++) {
-                    out += d[i]+"<br>";
+            switch(o.type) {
+                case 'ch_usr':
+                {
+                    var d = o.data;
+                    var out = "";
+                    for(var i = 0;i<d.length;i++) {
+                        out += d[i]+"<br>";
+                    }
+                    fx.html('chat_usr_div', out);
+                    break;
                 }
-                fx.html('chat_usr_div', out);
-            } else if(o.type == 'ch_last_msg'){
-                var data = o.data;
-                var out = "";
-                for(var i = 0;i<data.length;i++) {
-                    var d = data[i];
-                    out += ""+fx.dateTime(new Date(d.date)) + " " + d.usr + " : " + d.msg+"<br>";
+                case 'ch_last_msg':
+                {
+                    var data = o.data;
+                    var out = "";
+                    for(var i = 0;i<data.length;i++) {
+                        var d = data[i];
+                        out += ""+fx.dateTime(new Date(d.date)) + " " + d.usr + " : " + d.msg+"<br>";
+                    }
+                    fx.htmla('chat_msg_div', out);
+                    break;
                 }
-                fx.htmla('chat_msg_div', out);
-            } else if(o.type == 'ch_usr_del'){
-                var html = fx.id('chat_usr_div').innerHTML;
-                html = html.replace(o.data+"<br>", "");
-                fx.html('chat_usr_div', html);
-                fx.htmla('chat_msg_div', "<b>User "+o.data+" left chat</b><br>");
-            } else if(o.type == 'ch_usr_new'){
-                fx.htmla('chat_usr_div', o.data+"<br>")
-                fx.htmla('chat_msg_div', "<b>User "+o.data+" joined chat</b><br>");
-            } else if(o.type == 'ch_msg'){
-                var d = o.data;
-                var msg = ""+fx.dateTime(new Date(d.date)) + " " + d.usr + " : " + d.msg+"<br>";
-                fx.htmla('chat_msg_div', msg);
+                case 'ch_usr_del':
+                {
+                    var html = fx.id('chat_usr_div').innerHTML;
+                    html = html.replace(o.data+"<br>", "");
+                    fx.html('chat_usr_div', html);
+                    fx.htmla('chat_msg_div', "<b>User "+o.data+" left chat</b><br>");
+                    break;
+                }
+                case 'ch_usr_new':
+                {
+                    fx.htmla('chat_usr_div', o.data+"<br>")
+                    fx.htmla('chat_msg_div', "<b>User "+o.data+" joined chat</b><br>");
+                    break;
+                }
+                case 'ch_msg':
+                {
+                    console.log("msg");
+                    var d = o.data;
+                    var msg = ""+fx.dateTime(new Date(d.date)) + " " + d.usr + " : " + d.msg+"<br>";
+                    fx.htmla('chat_msg_div', msg);
+                    break;
+                }
+                default :
+                {
+                    alert("msg not implemented");
+                    break;
+                }
             }
             fx.scrollBottom('chat_msg_div');
             fx.scrollBottom('chat_usr_div');
