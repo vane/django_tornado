@@ -12,6 +12,7 @@ python django_tornado.py
 go to browser url http://127.0.0.1:8080/
 
 ##chat.py
-Simple chat app with memory storage and callbacks when user leaves/joins chat
+Simple chat app with memory storage and callbacks when user leaves/joins chat.
+Server side logic is in chat.py and client side in chat.js
 
 and you should see the time running and message to join some chat
