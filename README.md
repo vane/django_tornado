@@ -1,7 +1,13 @@
 #django_tornado
 This is just simple example of django running in tornado WSGI container with sockjs-tornado.
-First You notice that sample display current computer time in browser updated each second. 
-Second when You run the sample You can join some chat example. It's using django based requests to post data to server. And tornado-sockjs to send back data to client. You can also notice I use some session trick in views.py while serving index.html
+<br>
+Sample application display current computer time in browser updated each second.
+<br>
+There is also chat example using django based requests on server side to get data, and tornado-sockjs to send back data to client. 
+<br>
+Look at views.py cause I use some session trick when serving index.html
+<br>
+Chat example is in chat.py file, one line is located in urls.py
 
 ##configuration
 protocol, port and host are in constraint.py file
@@ -11,9 +17,15 @@ default are http 127.0.0.1 8080
 python django_tornado.py
 go to browser url http://127.0.0.1:8080/
 
-##chat.py
+##chat
 Simple chat app with memory storage and callbacks when user leaves/joins chat.
+<br>
 Server side logic is in chat.py and client side in chat.js
+<br>
+Also since we can add calback to PushClientStore and listen to sockjs client add / remove there is simple "howto" in urls.py
+<pre>
+PushClientStore.register('chat', chat.ChatStorage.callback)
+</pre>
 
 and you should see the time running and message to join some chat
 
