@@ -11,9 +11,24 @@ import time,pytz,datetime,json
 
 import logging
 
+PUSH_ID_NAME="push-id"
+
 class PushClientStore():
     clients = {}
     ids_channel = {}
+    callbacks = {}
+
+    @classmethod
+    def register(self, key, callback):
+        if self.callbacks.has_key(key):
+            return False
+        self.callbacks[key] = callback
+        return True
+
+    @classmethod
+    def unregister(self, key):
+        if self.callbacks.has_key(key):
+            del self.callbacks[key]
 
     @classmethod
     def add_client(self, client):
@@ -21,6 +36,8 @@ class PushClientStore():
         if client.user.is_authenticated():
             self.ids_channel[client.user.id] = client.channel
             return True
+        for c in self.callbacks:
+            self.callbacks[c]({'action':'add', 'client':client})
         return False
 
     @classmethod
@@ -28,6 +45,8 @@ class PushClientStore():
         if self.clients.has_key(client.channel):
             if client.user.is_authenticated():
                 del self.ids_channel[client.user.id]
+            for c in self.callbacks:
+                self.callbacks[c]({'action':'del', 'client':client})
             del self.clients[client.channel]
             return True
         return False
@@ -106,6 +125,8 @@ class PushClient(SockJSConnection):
         """
         from django.contrib import auth as user_auth
         session = self.get_session_store(request)
+        session[PUSH_ID_NAME] = self.session.session_id
+        session.save()
         request.session = session
         self.user = user_auth.get_user(request)
         self.channel = self.session.session_id

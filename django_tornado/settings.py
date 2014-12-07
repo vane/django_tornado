@@ -61,6 +61,8 @@ WSGI_APPLICATION = 'django_tornado.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
